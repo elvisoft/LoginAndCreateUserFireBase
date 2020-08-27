@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "284043741127",
+    "firebase_url": "https://misdatosarg.firebaseio.com",
+    "project_id": "misdatosarg",
+    "storage_bucket": "misdatosarg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284043741127:android:34cf1525c5a60564897be2",
+        "android_client_info": {
+          "package_name": "com.elvisoft.misdatosarg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284043741127-444uqgh1phgilugac9ohcoru118skkps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADy9yKHOYi-D7DNiVJc1BUdLOISVsR_jE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284043741127-444uqgh1phgilugac9ohcoru118skkps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
