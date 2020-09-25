@@ -7,44 +7,28 @@
     tools:context=".UserDashboardActivity">
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/textVBienvenido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="170dp"
-        android:layout_marginBottom="31dp"
         android:text="Bienvenido Usuario Logueado"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.151"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="101dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="182dp"
-        android:layout_marginBottom="106dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogout"
+    <ListView
+        android:id="@+id/ListCuentas"
+        android:layout_width="409dp"
+        android:layout_height="695dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/textVBienvenido" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="126dp"
-        android:layout_marginTop="106dp"
-        android:layout_marginEnd="197dp"
-        android:text="Logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

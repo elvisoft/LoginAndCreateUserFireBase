@@ -1,24 +1,22 @@
 package com.elvisoft.misdatosarg;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.view.View;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.FirebaseApp;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 public class registerUser extends AppCompatActivity {
     FirebaseAuth mAuth;
@@ -28,36 +26,125 @@ public class registerUser extends AppCompatActivity {
     private EditText etxtName;
     private EditText etxtPass;
     private EditText etxtEmail;
+    private EditText extxdni;
+    private EditText etxtpassrepit;
+    private EditText etxtrespuestasecret;
     private Button btnRegistrarNew;
+    private Spinner spinPregutas;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
-        mAuth = FirebaseAuth.getInstance();
-        dbref = FirebaseDatabase.getInstance().getReference();
-        etxtPass = findViewById(R.id.editTextTextPassword);
-        etxtEmail = findViewById(R.id.editTextTextEmailAddress);
-        etxtName = findViewById(R.id.editTextTextPersonName);
+
+        String[] arraySpinner = new String[] {
+                "Seleccione una pregunta a responder","Cual es tu comida favorita?", "Cual es tu deportista favorito?", "Cual es el nombre de tu mascota?", "Cual es el apellido de soltera de tu mama?"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinnermodel,arraySpinner);
+        spinPregutas=findViewById(R.id.spinnerPregunta);
+        spinPregutas.setAdapter(adapter);
+        //mAuth = FirebaseAuth.getInstance();
+        //dbref = FirebaseDatabase.getInstance().getReference();
+        inicializarFirebase();
+        etxtPass = findViewById(R.id.eTextPassword);
+        etxtEmail = findViewById(R.id.eTextEmail);
+        etxtName = findViewById(R.id.eTextName);
+        etxtpassrepit=findViewById(R.id.eTextPasswordRep);
+        extxdni=findViewById(R.id.eTextDNI);
         btnRegistrarNew=findViewById(R.id.btnregistrar);
+        etxtrespuestasecret=findViewById(R.id.eTextRespuestaSecret);
 
         btnRegistrarNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email=etxtEmail.getText().toString();
-                pass=etxtPass.getText().toString();
-                name=etxtName.getText().toString();
-                if(!email.isEmpty() && !pass.isEmpty())
-                {registerUser();}
-                else  {Toast.makeText(registerUser.this,"Debe rellenar todos los datos!",Toast.LENGTH_LONG).show();}
+                if(validacion())
+                {   RegisterNew();  }
+                else  {Toast.makeText(registerUser.this,"No se pudo registrar verifique sus datos ingresados porfavor!", Toast.LENGTH_LONG).show();}
             }
         });
 
     }
 
+    private boolean validacion() {
+        boolean resul=true;
+        String nombre = etxtName.getText().toString();
+        String correo = etxtEmail.getText().toString();
+        String password = etxtPass.getText().toString();
+        String passwordrep = etxtpassrepit.getText().toString();
+        String resp = etxtrespuestasecret.getText().toString();
+        if (nombre.equals("")){
+            etxtName.setError("Requerido");
+            resul=false;
+        }
+        else if (passwordrep.equals("")){
+            etxtpassrepit.setError("Requerido");
+            resul=false;
+        }
+        else if (correo.equals("")){
+            etxtEmail.setError("Requerido");
+            resul=false;
+        }
+        else if (password.equals("")){
+            etxtPass.setError("Requerido");
+            resul=false;
+        }
+        else if (resp.equals("")){
+            etxtrespuestasecret.setError("Requerido");
+            resul=false;
+        }
+        else if (!password.equals(passwordrep)){
+            etxtrespuestasecret.setError("Las contraseñas no coinciden!");
+            resul=false;
+        }
+        return resul;
+    }
+
+    private void limpiarCajas() {
+        etxtName.setText("");
+        etxtEmail.setText("");
+        etxtPass.setText("");
+        etxtpassrepit.setText("");
+        etxtrespuestasecret.setText("");
+    }
+
+    private void RegisterNew(){
+        String nombre = etxtName.getText().toString();
+        String correo = etxtEmail.getText().toString();
+        String password = etxtPass.getText().toString();
+        String strDni =extxdni.getText().toString();
+        //String passwordrep = etxtpassrepit.getText().toString();
+        String respuestsecret = etxtrespuestasecret.getText().toString();
+
+        Usuario u = new Usuario();
+        u.setUid(UUID.randomUUID().toString());
+        u.setNombre(nombre);
+        u.setDNI(strDni);
+        u.setCorreo(correo);
+        try{
+            u.setPassword(CodificadorAES.encriptar(password));
+            u.setRespuestasecret(CodificadorAES.encriptar(respuestsecret));
+            databaseReference.child("Users").child(u.getUid()).setValue(u);
+            Toast.makeText(this, "Se registro correctamente", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(registerUser.this,UserDashboardActivity.class));
+            finish();
+        }
+        catch (Exception e){
+            Toast.makeText(this, "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void inicializarFirebase() {
+        FirebaseApp.initializeApp(this);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        //firebaseDatabase.setPersistenceEnabled(true);
+        databaseReference = firebaseDatabase.getReference();
+    }
+
     private void registerUser() {
 
-        mAuth.createUserWithEmailAndPassword(email, pass)
+        /*mAuth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -87,6 +174,6 @@ public class registerUser extends AppCompatActivity {
 
                         // ...
                     }
-                });
+                });*/
     }
 }
